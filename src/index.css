@@ -1,0 +1,96 @@
+h3 {
+    font-weight: bold;
+    margin-bottom: 0;
+    margin-top: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+h6 {
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-bottom: 20px;
+}
+
+body {
+    background-color: #f5f7f5;
+}
+
+.btn-primary {
+    background-color: rgb(107, 2, 2);
+    border-color:  rgb(80, 10, 25);
+}
+
+.btn-primary:hover {
+    background-color: rgb(145, 4, 34);
+    border-color:  rgb(80, 10, 25);
+}
+
+
+.btn:focus,.btn:active {
+    outline: none;
+    box-shadow: none;
+ }
+
+
+
+.bar_heatiog_degree_days {
+    fill: #0e0c34;
+}
+
+.bar_heating_degree_days_average {
+   fill: #868599; 
+}
+
+.bar_heatiog_degree_days_text {
+    font-weight: bold;
+    text-anchor:middle;
+    font-size: x-small;
+    fill: #0e0c34;
+}
+
+.bar_heating_degree_days_average_text {
+    font-weight: bold;
+    text-anchor:middle;
+    font-size: x-small;
+    fill: #868599; 
+}
+
+.sum_text {
+    text-anchor:left;
+    font-size: 12px;
+    fill: rgb(31, 41, 32);  
+}
+
+.designations_heatiog_degree_days {
+    fill:#0e0c34;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: black;
+}
+
+.designations_heating_degree_days_average {
+   fill:#868599; 
+   outline-style: solid;
+   outline-width: 1px;
+   outline-color: black;
+}
+
+.designations_text {
+    text-anchor:left;
+    font-size: x-small;
+    fill: rgb(31, 41, 32);
+}
+
+.cridential {
+    font-size: 14px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.cridential a{
+    color: #2C5265;
+}
+
+.cridential a:hover{
+    text-decoration: underline;
+}
