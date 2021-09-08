@@ -1,70 +1,109 @@
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import {copyAllFields} from "../utils/object";
 
 export default class Graph {
     constructor(container) {
         am4core.useTheme(am4themes_animated);
-        this.chart = am4core.create(container, am4charts.XYChart);
+        this.initialize(container);
     }
 
-    initialize() {
-        const chart = this.chart;
-        chart.numberFormatter.numberFormat = "#.#'%'";
+    update(data) {
+        const monthly = this.calculateMonthlyData(data);
+        console.log("this.chart.data.length", this.chart.data.length, "monthly.length", monthly.length)
+        if (this.chart.data.length === monthly.length) {
+            console.log("smooth")
+            monthly.forEach((dataItem, i) => {
+                copyAllFields(this.chart.data[i], dataItem)
+            })
+            this.chart.invalidateRawData();
+            this.chart.series.each((series, i) => {
+                series.deepInvalidate();
+            })
+        } else {
+            this.chart.data = monthly;
+        }
+    }
 
-// Add data
-        chart.data = [{
-            "country": "USA",
-            "year2004": 3.5,
-            "year2005": 4.2
-        }, {
-            "country": "UK",
-            "year2004": 1.7,
-            "year2005": 3.1
-        }, {
-            "country": "Canada",
-            "year2004": 2.8,
-            "year2005": 2.9
-        }, {
-            "country": "Japan",
-            "year2004": 2.6,
-            "year2005": 2.3
-        }, {
-            "country": "France",
-            "year2004": 1.4,
-            "year2005": 2.1
-        }, {
-            "country": "Brazil",
-            "year2004": 2.6,
-            "year2005": 4.9
-        }];
+    updateTitle(t) {
+        const e = "hdd" === t.output ? "Heizgradtage (" + t.hdd + "°C)" : "Gradtagzahl (" + t.dd + "°C/" + t.hdd + "°C)";
+        this.dateAxis.title.text = e + " in " + t.city + " von " + this.formatDate(t.start) + " - " + this.formatDate(t.end)
+    }
 
-// Create axes
-        let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-        categoryAxis.dataFields.category = "country";
-        categoryAxis.renderer.grid.template.location = 0;
-        categoryAxis.renderer.minGridDistance = 30;
+    initialize(container) {
+        const chart = am4core.create(container, am4charts.XYChart);
+        this.chart = chart;
+        chart.zoomOutButton.disabled = !0;
+        const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+        dateAxis.dataFields.category = "Date";
+        dateAxis.renderer.grid.template.location = 0;
+        dateAxis.renderer.minGridDistance = 30;
+        dateAxis.renderer.labels.template.fontSize = 12;
+        dateAxis.renderer.labels.template.fontWeight = 600;
+        dateAxis.renderer.labels.template.fill = am4core.color("#79989d");
+        dateAxis.renderer.labels.template.font = "Roboto";
+        this.dateAxis = dateAxis;
 
         let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-        valueAxis.title.text = "GDP growth rate";
-        valueAxis.title.fontWeight = 800;
+        valueAxis.title.fontWeight = '800';
+        valueAxis.renderer.labels.template.fontSize = 12;
+        valueAxis.renderer.labels.template.fontWeight = 600;
+        valueAxis.renderer.labels.template.fill = am4core.color("#79989d");
+        valueAxis.renderer.labels.template.font = "Roboto";
+        valueAxis.title.text = "Monatlicher Wert";
+        valueAxis.title.fontSize = 14;
+        valueAxis.title.fontWeight = 600;
+        valueAxis.title.fill = am4core.color("#79989d");
+        valueAxis.title.font = "Roboto";
 
-// Create series
         let series = chart.series.push(new am4charts.ColumnSeries());
-        series.dataFields.valueY = "year2004";
-        series.dataFields.categoryX = "country";
+        series.dataFields.valueY = "HDD";
+        series.dataFields.dateX = "Date";
         series.clustered = false;
-        series.tooltipText = "GDP grow in {categoryX} (2004): [bold]{valueY}[/]";
-
-        let series2 = chart.series.push(new am4charts.ColumnSeries());
-        series2.dataFields.valueY = "year2005";
-        series2.dataFields.categoryX = "country";
-        series2.clustered = false;
-        series2.columns.template.width = am4core.percent(50);
-        series2.tooltipText = "GDP grow in {categoryX} (2005): [bold]{valueY}[/]";
+        series.tooltipText = "Monatlicher Wert [bold]{valueY}[/]";
+        series.columns.template.fill = am4core.color("#2C5265");
+        series.columns.template.strokeWidth = 0;
+        series.tooltipText = "langjähriges Mittel [bold]{valueY}[/]";
 
         chart.cursor = new am4charts.XYCursor();
-        chart.cursor.lineX.disabled = true;
-        chart.cursor.lineY.disabled = true;
+        chart.cursor.lineX.disabled = false;
+        chart.cursor.lineY.disabled = false;
+
+    }
+
+    formatDate(src) {
+        const date = new Date(src);
+        let i = ("0" + (date.getMonth() + 1)).slice(-2);
+        return ("0" + date.getDate()).slice(-2) + "." + i + "." + date.getFullYear()
+    }
+
+    calculateMonthlyData(data) {
+        console.log("data", data)
+        let oldId, i, date, curId, res = [];
+        data.forEach(entry => {
+            date = new Date(entry.Date);
+            curId = date.getYear() * (date.getMonth() + 1);
+            if (oldId !== curId) {
+                oldId = curId;
+                i = {
+                    Date: date,
+                    HDD: 0,
+                };
+                res.push(i);
+            }
+            const a = parseFloat(entry.HDD, 10);
+            if (!isNaN(a)) {
+                i.HDD += a;
+            }
+        })
+
+
+        console.log("res", res)
+
+        return res.map(t => {
+            t.HDD = Math.round(t.HDD);
+            return t;
+        })
     }
 }

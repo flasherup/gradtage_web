@@ -1,4 +1,4 @@
-const dates = {
+export const dates = {
     years: [
         {value: "2008", label: 2008},
         {value: "2009", label: 2009},

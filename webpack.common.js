@@ -17,7 +17,7 @@ module.exports = {
         filename: 'gradtage.js',
         path: path.resolve(__dirname, 'build'),
         libraryTarget: 'umd',
-        library: 'Calendar',
+        library: 'Gradtage',
         umdNamedDefine: true,
         libraryExport: 'default'
     },
