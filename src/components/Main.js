@@ -1,10 +1,14 @@
 import Graph from "./Graph";
 import Form from "./Form";
 import Loader from "../utils/Loader";
+import {CSVDataParser} from "../utils/data";
 
 export default class Main {
     constructor() {
-        this.loader = new Loader("https://api.energy-data.io", "5yxCagf54lvpqejuW8rA");
+        const endpoint = "https://api.energy-data.io";
+        //const endpoint = "http://localhost:8032";
+        const key = "hSlSfSlHmfJtpGqCmfLR";
+        this.loader = new Loader(endpoint, key);
         const graph = document.getElementById("gradtage-graph");
         const form = document.getElementById("gradtage-form");
         if (graph) {
@@ -32,21 +36,10 @@ export default class Main {
     }
 
     onDataLoaded(temps) {
-        console.log("temps", temps);
         if (this.graph) {
-            const data = (t => {
-                let e = t.split(/\n/g) || [];
-                let i = e.shift().split(",");
-                return e.map(t => {
-                    const e = {}, n = t.split(",");
-                    i.forEach((t, i) => {
-                        e[t] = n[i]
-                    });
-                    return e;
-                })
-            })(temps);
-            console.log("data", data);
-            this.graph.update(data)
+            const parsed  = CSVDataParser(temps, ";");
+            console.log(parsed);
+            this.graph.update(parsed.data)
         }
     }
 }

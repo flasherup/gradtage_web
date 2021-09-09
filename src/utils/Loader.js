@@ -5,7 +5,7 @@ export default class Loader {
     }
 
     loadDegree(data, success, error) {
-        const url = this.endPoint + "/temperature";
+        const url = this.endPoint + "/degreedays/" + data.output + "/mean/";
         const request = new XMLHttpRequest;
         request.open("POST", url)
         request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -22,7 +22,7 @@ export default class Loader {
             end: data.end,
             tb: data.hdd,
             tr: data.dd,
-            output: data.output
+            breakdown: "monthly"
         }))
     }
 }

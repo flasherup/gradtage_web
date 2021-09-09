@@ -15,7 +15,7 @@ module.exports = {
     ],
     output: {
         filename: 'gradtage.js',
-        path: path.resolve(__dirname, 'build'),
+        path: path.resolve(__dirname, 'build/lib'),
         libraryTarget: 'umd',
         library: 'Gradtage',
         umdNamedDefine: true,

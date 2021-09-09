@@ -10,7 +10,8 @@ export default class Graph {
     }
 
     update(data) {
-        const monthly = this.calculateMonthlyData(data);
+        //const monthly = this.calculateMonthlyData(data);
+        const monthly = data;
         console.log("this.chart.data.length", this.chart.data.length, "monthly.length", monthly.length)
         if (this.chart.data.length === monthly.length) {
             console.log("smooth")
@@ -36,7 +37,7 @@ export default class Graph {
         this.chart = chart;
         chart.zoomOutButton.disabled = !0;
         const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-        dateAxis.dataFields.category = "Date";
+        dateAxis.dataFields.category = "date";
         dateAxis.renderer.grid.template.location = 0;
         dateAxis.renderer.minGridDistance = 30;
         dateAxis.renderer.labels.template.fontSize = 12;
@@ -58,8 +59,8 @@ export default class Graph {
         valueAxis.title.font = "Roboto";
 
         let series = chart.series.push(new am4charts.ColumnSeries());
-        series.dataFields.valueY = "HDD";
-        series.dataFields.dateX = "Date";
+        series.dataFields.valueY = "hdd";
+        series.dataFields.dateX = "date";
         series.clustered = false;
         series.tooltipText = "Monatlicher Wert [bold]{valueY}[/]";
         series.columns.template.fill = am4core.color("#2C5265");
@@ -78,7 +79,7 @@ export default class Graph {
         return ("0" + date.getDate()).slice(-2) + "." + i + "." + date.getFullYear()
     }
 
-    calculateMonthlyData(data) {
+    /*calculateMonthlyData(data) {
         console.log("data", data)
         let oldId, i, date, curId, res = [];
         data.forEach(entry => {
@@ -105,5 +106,5 @@ export default class Graph {
             t.HDD = Math.round(t.HDD);
             return t;
         })
-    }
+    }*/
 }
