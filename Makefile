@@ -6,7 +6,7 @@ upload_app:
 	pscp build.zip flasherup@212.227.215.17:/home/flasherup/
 
 update_app:
-	ssh flasherup@212.227.215.17 "unzip build.zip && sudo rm -rf /var/www/html/* && sudo mv build/* /var/www/html/ && rm -r build"
+	ssh flasherup@212.227.215.17 "sudo -S unzip build.zip && sudo rm -rf /var/www/html/lib && sudo mkdir /var/www/html/lib && sudo mv build/* /var/www/html/lib/ && rm -r build"
 
 deploy_app:
 	make build_app
